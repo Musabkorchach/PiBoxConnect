@@ -1,0 +1,12 @@
+{
+  "name": "Pi Box Connect",
+  "short_name": "Pi Box",
+  "description": "Your Pi Wallet. Your Identity. Your Connection.",
+  "start_url": "/pi",
+  "display": "standalone",
+  "background_color": "#11051f",
+  "theme_color": "#6d3bd6",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

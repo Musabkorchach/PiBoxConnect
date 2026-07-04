@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Pi SDK Loader</title>
+</head>
+<body>
+  <!-- Pi Network SDK Mock for Development -->
+  <script>
+    if (typeof window !== 'undefined' && !window.Pi) {
+      window.Pi = {
+        init: function(config) {
+          console.log('[Pi SDK] Initialized with config:', config);
+        },
+        authenticate: function(scopes, onIncompletePaymentFound) {
+          console.log('[Pi SDK] Authenticating with scopes:', scopes);
+          return Promise.resolve({
+            accessToken: 'mock_access_token',
+            user: {
+              uid: 'mock_user_id',
+              username: 'testuser',
+              walletAddress: 'GXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+            }
+          });
+        }
+      };
+    }
+  </script>
+  <!-- In production, load actual Pi SDK -->
+  <!-- <script src="https://sdk.minepi.com/pi-sdk.js"></script> -->
+</body>
+</html>
