@@ -1,12 +1,14 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
+import Script from "next/script"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { AppWrapper } from "@/components/app-wrapper"
+import { PiAuthBootstrap } from "@/components/pi-auth-bootstrap"
 import "./globals.css"
 
 const appName = process.env.NEXT_PUBLIC_APP_NAME || "Pi Box Connect"
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://gdi.pi"
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://pi-box-connect.vercel.app"
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
@@ -18,8 +20,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   openGraph: {
     title: appName,
-    description:
-      "Your Pi Wallet. Your Identity. Your Connection.",
+    description: "Your Pi Wallet. Your Identity. Your Connection.",
     url: appUrl,
     siteName: appName,
     type: "website",
@@ -40,6 +41,10 @@ export default function RootLayout({
   return (
     <html lang="ar" suppressHydrationWarning>
       <head>
+        <Script
+          src="https://sdk.minepi.com/pi-sdk.js"
+          strategy="beforeInteractive"
+        />
         <style>{`
 html {
   font-family: ${GeistSans.style.fontFamily};
@@ -49,7 +54,10 @@ html {
         `}</style>
       </head>
       <body>
-        <AppWrapper>{children}</AppWrapper>
+        <AppWrapper>
+          <PiAuthBootstrap />
+          {children}
+        </AppWrapper>
       </body>
     </html>
   )
