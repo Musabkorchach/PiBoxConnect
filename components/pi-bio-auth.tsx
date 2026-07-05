@@ -512,7 +512,7 @@ export default function PiBioAuth() {
               </div>
               <div className="min-w-0">
                 <p className="truncate text-xl font-bold">{displayName || user.username}</p>
-                <p className="text-sm text-slate-400">Pi Wallet verified identity</p>
+                <p className="text-sm text-slate-400">Pi Wallet address.verified identity</p>
                 <p className="mt-2 inline-flex rounded-full border border-purple-400/30 bg-purple-500/10 px-3 py-1 text-xs text-purple-100">
                   {shortIdentity(identity)}
                 </p>
