@@ -838,5 +838,3 @@ function MessageList({
     </Panel>
   )
 }
-EOF
-wc -l /mnt/data/page-redesigned.tsx
