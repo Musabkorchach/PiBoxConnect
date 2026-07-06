@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   description:
     "A secure communication platform that uses your Pi Wallet address as your digital identity.",
   applicationName: appName,
+  icons: {
+  icon: "/brand/app-icon.png",
+  shortcut: "/brand/app-icon.png",
+  apple: "/brand/app-icon.png",
+},
   generator: "Pi Box Connect",
   manifest: "/manifest.webmanifest",
   openGraph: {
