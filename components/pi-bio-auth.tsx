@@ -1,6 +1,6 @@
 "use client"
 
-import Dashboard from "./dashboard"
+import NewDashboard from "./new-dashboard"
 import type React from "react"
 import { useEffect, useMemo, useState } from "react"
 import { getPiIdentity, isPiSdkAvailable, signInWithPi, type PiUser } from "@/lib/pi-auth"
@@ -474,7 +474,7 @@ export default function PiBioAuth() {
     )
   }
   if (user) {
-  return <Dashboard />
+  return <NewDashboard />
 }
 
   return (

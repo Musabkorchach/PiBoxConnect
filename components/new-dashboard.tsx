@@ -48,9 +48,6 @@ export default function NewDashboard() {
               <p className="text-slate-300">Signed in as @Musabkorchac</p>
             </div>
 
-            <button className="rounded-2xl bg-gradient-to-r from-purple-700 to-fuchsia-600 px-5 py-3 font-bold shadow-lg shadow-purple-900/40">
-              Sign in with Pi
-            </button>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
