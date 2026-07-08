@@ -1,5 +1,6 @@
 "use client"
 
+import Dashboard from "./dashboard"
 import type React from "react"
 import { useEffect, useMemo, useState } from "react"
 import { getPiIdentity, isPiSdkAvailable, signInWithPi, type PiUser } from "@/lib/pi-auth"
@@ -210,10 +211,10 @@ const appKey = (identity: string) => `pi-box-connect:${identity}`
 const languageKey = "pi-box-connect:language"
 
 function detectInitialLanguage(): Language {
-  if (typeof window === "undefined") return "ar"
+  if (typeof window === "undefined") return "en"
   const saved = localStorage.getItem(languageKey)
   if (saved === "ar" || saved === "en") return saved
-  return navigator.language?.toLowerCase().startsWith("ar") ? "ar" : "en"
+  return "en"
 }
 
 function shortIdentity(value: string) {
@@ -235,9 +236,9 @@ function saveState(identity: string, state: AppState) {
 }
 
 export default function PiBioAuth() {
-  const [language, setLanguageState] = useState<Language>("ar")
+  const [language, setLanguageState] = useState<Language>("en")
   useEffect(() => {
-    setLanguageState(detectInitialLanguage())
+    setLanguageState("en")
   }, [])
   const t = dictionary[language]
   const direction = language === "ar" ? "rtl" : "ltr"
@@ -472,6 +473,9 @@ export default function PiBioAuth() {
       </main>
     )
   }
+  if (user) {
+  return <Dashboard />
+}
 
   return (
     <div dir={direction} className="relative min-h-screen overflow-hidden bg-[#030712] pb-28 text-white">
