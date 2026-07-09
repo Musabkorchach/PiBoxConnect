@@ -1,0 +1,51 @@
+# Box Connect - Project Rules
+
+**Version:** 1.0  
+**Project:** Box Connect  
+**Owner:** Musab AlFadel Ahmed  
+**Technical Partner:** ChatGPT
+
+---
+
+# Vision
+
+Box Connect is a secure communication platform built for the Pi Network ecosystem.
+
+Every decision must improve:
+
+- Code Quality
+- Security
+- Scalability
+- User Experience
+- Maintainability
+
+---
+
+# Core Rules
+
+## Rule 1 — Understand Before Coding
+
+Never write code before understanding the real problem.
+
+## Rule 2 — Modify Before Creating
+
+Do not create a new file, folder, component, or function if the existing one can be safely improved.
+
+## Rule 3 — One Goal Per Session
+
+Every work session has one clear objective.
+
+Finish it, test it, commit it, then move on.
+
+## Rule 4 — Explain Every Change
+
+Before changing code, explain:
+
+- Why?
+- What will change?
+- Possible side effects?
+- Is there a better solution?
+
+## Rule 5 — GitHub Is The Source Of Truth
+
+Every stable version must be saved:
