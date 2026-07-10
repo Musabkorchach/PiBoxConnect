@@ -15,7 +15,6 @@ import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
 import {
   Archive,
-  Bell,
   CheckCircle2,
   Copy,
   Globe2,
@@ -24,7 +23,6 @@ import {
   Lock,
   MailPlus,
   MessageCircle,
-  MessageSquare,
   Phone,
   Send,
   Settings,
@@ -35,7 +33,6 @@ import {
   Users,
   Video,
   Wallet,
-  Zap,
 } from "lucide-react"
 
 type Language = "ar" | "en"
@@ -258,6 +255,7 @@ export default function PiBioAuth() {
   const [body, setBody] = useState("")
   const [contactName, setContactName] = useState("")
   const [contactIdentity, setContactIdentity] = useState("")
+  const [activeTab, setActiveTab] = useState<string>("inbox")
 
   const identity = useMemo(() => (user ? getPiIdentity(user) : ""), [user])
   const unreadCount = messages.filter((message) => message.folder === "inbox" && !message.read).length
@@ -540,39 +538,54 @@ export default function PiBioAuth() {
           </div>
         </section>
 
-        {/* ✅ تم استبدال Stat بـ StatButton هنا */}
+        {/* البطاقات - أصبحت الآن تعمل مع useState */}
         <div className="mb-6 grid gap-4 md:grid-cols-4">
-          <StatButton 
-            icon={<Inbox />} 
-            label={t.unread} 
-            value={unreadCount} 
-            accent="purple" 
-            onClick={() => document.querySelector('[value="inbox"]')?.click()}
-          />
-          <StatButton 
-            icon={<MessageCircle />} 
-            label={t.messages} 
-            value={messages.length} 
-            accent="blue" 
-            onClick={() => document.querySelector('[value="compose"]')?.click()}
-          />
-          <StatButton 
-            icon={<Users />} 
-            label={t.totalContacts} 
-            value={contacts.length} 
-            accent="emerald" 
-            onClick={() => document.querySelector('[value="contacts"]')?.click()}
-          />
-          <StatButton 
-            icon={<Phone />} 
-            label={t.totalCalls} 
-            value={calls.length} 
-            accent="gold" 
-            onClick={() => document.querySelector('[value="calls"]')?.click()}
-          />
+          <div 
+            className="rounded-[1.7rem] border bg-gradient-to-br from-purple-600/40 to-purple-900/20 p-5 shadow-xl shadow-black/20 backdrop-blur-xl cursor-pointer hover:scale-[1.02] transition-all duration-200"
+            onClick={() => setActiveTab("inbox")}
+          >
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-black/30">
+              <Inbox className="h-6 w-6 text-white" />
+            </div>
+            <p className="text-sm text-slate-300">{t.unread}</p>
+            <p className="mt-1 text-4xl font-black text-white">{unreadCount}</p>
+          </div>
+
+          <div 
+            className="rounded-[1.7rem] border bg-gradient-to-br from-blue-500/30 to-blue-900/20 p-5 shadow-xl shadow-black/20 backdrop-blur-xl cursor-pointer hover:scale-[1.02] transition-all duration-200"
+            onClick={() => setActiveTab("compose")}
+          >
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-black/30">
+              <MessageCircle className="h-6 w-6 text-white" />
+            </div>
+            <p className="text-sm text-slate-300">{t.messages}</p>
+            <p className="mt-1 text-4xl font-black text-white">{messages.length}</p>
+          </div>
+
+          <div 
+            className="rounded-[1.7rem] border bg-gradient-to-br from-emerald-500/25 to-emerald-900/20 p-5 shadow-xl shadow-black/20 backdrop-blur-xl cursor-pointer hover:scale-[1.02] transition-all duration-200"
+            onClick={() => setActiveTab("contacts")}
+          >
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-black/30">
+              <Users className="h-6 w-6 text-white" />
+            </div>
+            <p className="text-sm text-slate-300">{t.totalContacts}</p>
+            <p className="mt-1 text-4xl font-black text-white">{contacts.length}</p>
+          </div>
+
+          <div 
+            className="rounded-[1.7rem] border bg-gradient-to-br from-yellow-500/30 to-yellow-900/20 p-5 shadow-xl shadow-black/20 backdrop-blur-xl cursor-pointer hover:scale-[1.02] transition-all duration-200"
+            onClick={() => setActiveTab("calls")}
+          >
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-black/30">
+              <Phone className="h-6 w-6 text-white" />
+            </div>
+            <p className="text-sm text-slate-300">{t.totalCalls}</p>
+            <p className="mt-1 text-4xl font-black text-white">{calls.length}</p>
+          </div>
         </div>
 
-        <Tabs defaultValue="inbox" className="space-y-5">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-5">
           <TabsList className="flex h-auto flex-wrap justify-start gap-2 rounded-3xl border border-white/10 bg-white/[0.05] p-2 backdrop-blur-xl">
             <AppTab value="inbox" icon={<Inbox />} label={t.inbox} />
             <AppTab value="compose" icon={<MailPlus />} label={t.compose} />
@@ -765,55 +778,6 @@ function Pill({ icon, text }: { icon: React.ReactNode; text: string }) {
       <span className="text-yellow-300">{icon}</span>
       {text}
     </span>
-  )
-}
-
-// ✅ تم إضافة StatButton الجديد (الذي يعمل كزر)
-function StatButton({ 
-  label, 
-  value, 
-  icon, 
-  accent, 
-  onClick 
-}: { 
-  label: string
-  value: number
-  icon: React.ReactNode
-  accent: "purple" | "blue" | "emerald" | "gold"
-  onClick: () => void
-}) {
-  const colors = {
-    purple: "from-purple-600/40 to-purple-900/20 text-purple-200 border-purple-400/30 hover:border-purple-400/70",
-    blue: "from-blue-500/30 to-blue-900/20 text-blue-200 border-blue-400/30 hover:border-blue-400/70",
-    emerald: "from-emerald-500/25 to-emerald-900/20 text-emerald-200 border-emerald-400/30 hover:border-emerald-400/70",
-    gold: "from-yellow-500/30 to-yellow-900/20 text-yellow-100 border-yellow-400/30 hover:border-yellow-400/70",
-  }
-  return (
-    <button 
-      onClick={onClick}
-      className={`w-full text-left rounded-[1.7rem] border bg-gradient-to-br ${colors[accent]} p-5 shadow-xl shadow-black/20 backdrop-blur-xl transition-all duration-200 hover:scale-[1.02] cursor-pointer`}
-    >
-      <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-black/30">{icon}</div>
-      <p className="text-sm text-slate-300">{label}</p>
-      <p className="mt-1 text-4xl font-black text-white">{value}</p>
-    </button>
-  )
-}
-
-// Stat القديم لم نعد نستخدمه، لكن يمكنك تركه أو حذفه
-function Stat({ label, value, icon, accent }: { label: string; value: number; icon: React.ReactNode; accent: "purple" | "blue" | "emerald" | "gold" }) {
-  const colors = {
-    purple: "from-purple-600/40 to-purple-900/20 text-purple-200 border-purple-400/30",
-    blue: "from-blue-500/30 to-blue-900/20 text-blue-200 border-blue-400/30",
-    emerald: "from-emerald-500/25 to-emerald-900/20 text-emerald-200 border-emerald-400/30",
-    gold: "from-yellow-500/30 to-yellow-900/20 text-yellow-100 border-yellow-400/30",
-  }
-  return (
-    <div className={`rounded-[1.7rem] border bg-gradient-to-br ${colors[accent]} p-5 shadow-xl shadow-black/20 backdrop-blur-xl`}>
-      <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-black/30">{icon}</div>
-      <p className="text-sm text-slate-300">{label}</p>
-      <p className="mt-1 text-4xl font-black text-white">{value}</p>
-    </div>
   )
 }
 
