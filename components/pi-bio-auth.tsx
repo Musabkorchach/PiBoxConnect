@@ -207,13 +207,6 @@ const id = () =>
 const appKey = (identity: string) => `pi-box-connect:${identity}`
 const languageKey = "pi-box-connect:language"
 
-function detectInitialLanguage(): Language {
-  if (typeof window === "undefined") return "en"
-  const saved = localStorage.getItem(languageKey)
-  if (saved === "ar" || saved === "en") return saved
-  return "en"
-}
-
 function shortIdentity(value: string) {
   return value.length <= 22 ? value : `${value.slice(0, 12)}…${value.slice(-8)}`
 }
@@ -538,11 +531,14 @@ export default function PiBioAuth() {
           </div>
         </section>
 
-        {/* البطاقات - أصبحت الآن تعمل مع useState */}
+        {/* البطاقات - تعمل مع useState */}
         <div className="mb-6 grid gap-4 md:grid-cols-4">
           <div 
             className="rounded-[1.7rem] border bg-gradient-to-br from-purple-600/40 to-purple-900/20 p-5 shadow-xl shadow-black/20 backdrop-blur-xl cursor-pointer hover:scale-[1.02] transition-all duration-200"
-            onClick={() => setActiveTab("inbox")}
+            onClick={() => {
+              console.log("✅ تم الضغط على: غير مقروء");
+              setActiveTab("inbox");
+            }}
           >
             <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-black/30">
               <Inbox className="h-6 w-6 text-white" />
@@ -553,7 +549,10 @@ export default function PiBioAuth() {
 
           <div 
             className="rounded-[1.7rem] border bg-gradient-to-br from-blue-500/30 to-blue-900/20 p-5 shadow-xl shadow-black/20 backdrop-blur-xl cursor-pointer hover:scale-[1.02] transition-all duration-200"
-            onClick={() => setActiveTab("compose")}
+            onClick={() => {
+              console.log("✅ تم الضغط على: الرسائل");
+              setActiveTab("compose");
+            }}
           >
             <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-black/30">
               <MessageCircle className="h-6 w-6 text-white" />
@@ -564,7 +563,10 @@ export default function PiBioAuth() {
 
           <div 
             className="rounded-[1.7rem] border bg-gradient-to-br from-emerald-500/25 to-emerald-900/20 p-5 shadow-xl shadow-black/20 backdrop-blur-xl cursor-pointer hover:scale-[1.02] transition-all duration-200"
-            onClick={() => setActiveTab("contacts")}
+            onClick={() => {
+              console.log("✅ تم الضغط على: الجهات");
+              setActiveTab("contacts");
+            }}
           >
             <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-black/30">
               <Users className="h-6 w-6 text-white" />
@@ -575,7 +577,10 @@ export default function PiBioAuth() {
 
           <div 
             className="rounded-[1.7rem] border bg-gradient-to-br from-yellow-500/30 to-yellow-900/20 p-5 shadow-xl shadow-black/20 backdrop-blur-xl cursor-pointer hover:scale-[1.02] transition-all duration-200"
-            onClick={() => setActiveTab("calls")}
+            onClick={() => {
+              console.log("✅ تم الضغط على: طلبات الاتصال");
+              setActiveTab("calls");
+            }}
           >
             <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-black/30">
               <Phone className="h-6 w-6 text-white" />
