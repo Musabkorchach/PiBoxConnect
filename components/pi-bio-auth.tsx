@@ -297,25 +297,53 @@ function SettingsView({
 }: {
   language: LanguageCode
   setLanguage: (language: LanguageCode) => void
-})  { const [notifications,setNotifications]=useState(true); const [privacy,setPrivacy]=useState(true); return <section><PageTitle title="الإعدادات" subtitle="خصص تجربتك"/>
+}) {
+  const [notifications, setNotifications] = useState(true)
+  const [privacy, setPrivacy] = useState(true)
+  const [languageOpen, setLanguageOpen] = useState(false)
+
+  return <section><PageTitle title="الإعدادات" subtitle="خصص تجربتك"/>
 <div className="glass-panel rounded-[2rem] p-4">
   <label className="mb-2 block text-sm font-bold text-violet-100">
     {translations[language].language}
   </label>
 
-  <select
-    value={language}
-    onChange={(event) =>
-      setLanguage(event.target.value as LanguageCode)
-    }
-    className="w-full rounded-2xl border border-white/15 bg-[#1a0b2e] px-4 py-3 text-white outline-none"
-  >
+  <button
+  type="button"
+  onClick={() => setLanguageOpen((open) => !open)}
+  className="flex w-full items-center justify-between rounded-2xl border border-white/15 bg-[#1a0b2e] px-4 py-3 text-white"
+>
+  <span>
+    {languages.find((item) => item.code === language)?.name}
+  </span>
+  <ChevronRight
+    className={`h-5 w-5 transition-transform ${
+      languageOpen ? "rotate-90" : ""
+    }`}
+  />
+</button>
+
+{languageOpen && (
+  <div className="mt-3 max-h-72 overflow-y-auto rounded-2xl border border-white/15 bg-[#160d25] p-2">
     {languages.map((item) => (
-      <option key={item.code} value={item.code}>
+      <button
+        key={item.code}
+        type="button"
+        onClick={() => {
+          setLanguage(item.code)
+          setLanguageOpen(false)
+        }}
+        className={`mb-1 flex w-full rounded-xl px-4 py-3 text-start ${
+          language === item.code
+            ? "bg-violet-500/30 text-white"
+            : "text-violet-100 hover:bg-white/10"
+        }`}
+      >
         {item.name}
-      </option>
+      </button>
     ))}
-  </select>
+  </div>
+)}
 </div>
 <div className="glass-panel rounded-[2rem] p-4">{[{t:"الإشعارات",d:"تنبيهات الرسائل والمكالمات",i:Bell,v:notifications,s:setNotifications},{t:"الخصوصية",d:"السماح لجهات الاتصال فقط",i:ShieldCheck,v:privacy,s:setPrivacy}].map(x=>{const I=x.i;return <div key={x.t} className="setting-row"><span className="service-icon h-11 w-11 bg-gradient-to-br from-violet-500 to-fuchsia-500"><I/></span><span className="flex-1"><strong>{x.t}</strong><small className="block text-violet-200/55">{x.d}</small></span><button onClick={()=>x.s(!x.v)} className={`toggle ${x.v?"on":""}`}><span/></button></div>})}<div className="setting-row"><span className="service-icon h-11 w-11 bg-gradient-to-br from-cyan-500 to-blue-600"><Globe2/></span><span className="flex-1"><strong>اللغة</strong><small className="block text-violet-200/55">العربية</small></span><ChevronRight className="h-5 w-5 rotate-180"/></div></div></section> }
 function PageTitle({title,subtitle}:{title:string;subtitle:string}) { return <div className="mb-5"><h1 className="text-3xl font-black">{title}</h1><p className="mt-1 text-violet-200/60">{subtitle}</p></div> }
