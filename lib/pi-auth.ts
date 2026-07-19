@@ -4,6 +4,7 @@ export interface PiUser {
   uid: string
   username: string
   walletAddress?: string
+  wallet_address?: string
 }
 
 export interface PiAuthResult {
@@ -84,5 +85,5 @@ export async function signInWithPi(): Promise<PiAuthResult> {
 }
 
 export function getPiIdentity(user: PiUser) {
-  return user.walletAddress || `pi:${user.uid}`
+  return user.walletAddress || user.wallet_address || `pi:${user.uid}`
 }
