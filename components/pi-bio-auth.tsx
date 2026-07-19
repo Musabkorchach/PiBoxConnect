@@ -1,5 +1,10 @@
 "use client"
 
+import {
+  languages,
+  translations,
+  type LanguageCode,
+} from "@/lib/i18n/translations"
 import { useEffect, useMemo, useRef, useState } from "react"
 import {
   ArrowLeft, Bell, Camera, CheckCheck, ChevronRight, FileText, Globe2, Home, Image as ImageIcon,
@@ -42,6 +47,8 @@ function avatarText(name: string) { return (name || "P").slice(0, 1).toUpperCase
 function nowTime() { return new Date().toLocaleTimeString("ar", { hour: "2-digit", minute: "2-digit" }) }
 
 export default function PiBioAuth() {
+  const [language, setLanguage] = useState<LanguageCode>("ar")
+  const t = translations[language]
   const [user, setUser] = useState<PiUser | null>(null)
   const [loading, setLoading] = useState(false)
   const [view, setView] = useState<View>("home")
@@ -55,6 +62,21 @@ export default function PiBioAuth() {
     { id: "welcome", kind: "text", text: "مرحبًا بك في Pi Box Connect 👋", mine: false, time: "09:42" },
     { id: "privacy", kind: "text", text: "تواصل بهويتك في Pi، بدون رقم هاتف أو بريد إلكتروني.", mine: false, time: "09:43" },
   ])
+  useEffect(() => {
+  const savedLanguage = localStorage.getItem("pi-box-language") as LanguageCode | null
+
+  if (savedLanguage && translations[savedLanguage]) {
+    setLanguage(savedLanguage)
+  }
+}, [])
+
+useEffect(() => {
+  const selectedLanguage = languages.find((item) => item.code === language)
+
+  localStorage.setItem("pi-box-language", language)
+  document.documentElement.lang = language
+  document.documentElement.dir = selectedLanguage?.dir ?? "ltr"
+}, [language])
   const mediaRecorder = useRef<MediaRecorder | null>(null)
   const chunks = useRef<Blob[]>([])
   const fileInput = useRef<HTMLInputElement | null>(null)
@@ -186,7 +208,12 @@ export default function PiBioAuth() {
           {view === "calls" && <CallsView />}
           {view === "files" && <FilesView />}
           {view === "profile" && <ProfileView name={displayName} identity={identity} />}
-          {view === "settings" && <SettingsView />}
+          {view === "settings" && (
+  <SettingsView
+    language={language}
+    setLanguage={setLanguage}
+  />
+)}
         </div>
 
         <input ref={fileInput} type="file" className="hidden" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0], "file")} />
@@ -264,5 +291,31 @@ function ContactsView({ onChat }: { onChat:(c:Contact)=>void }) { return <sectio
 function CallsView() { return <section><PageTitle title="المكالمات" subtitle="صوت وفيديو"/><div className="glass-panel rounded-[2rem] p-4"><div className="grid grid-cols-2 gap-3"><button className="call-card from-emerald-500 to-cyan-500"><Phone/>مكالمة صوتية</button><button className="call-card from-violet-500 to-fuchsia-500"><Video/>مكالمة فيديو</button></div><div className="mt-5 space-y-2">{contacts.map((c,i)=><div key={c.id} className="contact-row"><span className={`avatar bg-gradient-to-br ${c.color}`}>{avatarText(c.name)}</span><span className="flex-1"><strong>{c.name}</strong><small className="block text-violet-200/55">{i===1?"مكالمة فائتة":"مكالمة صادرة"} · اليوم</small></span><button className="icon-button">{i%2?<Video/>:<Phone/>}</button></div>)}</div></div></section> }
 function FilesView() { return <section><PageTitle title="الملفات والوسائط" subtitle="كل ما تمت مشاركته"/><div className="grid grid-cols-2 gap-4 md:grid-cols-4">{[{l:"الصور",i:ImageIcon,g:"from-pink-500 to-orange-400",n:"24"},{l:"الصوتيات",i:Mic,g:"from-cyan-500 to-blue-500",n:"8"},{l:"المستندات",i:FileText,g:"from-amber-400 to-orange-500",n:"12"},{l:"المواقع",i:MapPin,g:"from-emerald-400 to-teal-600",n:"5"}].map(x=>{const I=x.i;return <div key={x.l} className="service-card"><span className={`service-icon bg-gradient-to-br ${x.g}`}><I/></span><strong>{x.l}</strong><small>{x.n} عناصر</small></div>})}</div></section> }
 function ProfileView({ name, identity }: { name:string; identity:string }) { return <section><PageTitle title="البروفايل" subtitle="هويتك داخل Pi Box Connect"/><div className="glass-panel overflow-hidden rounded-[2.2rem]"><div className="h-36 bg-gradient-to-r from-violet-700 via-fuchsia-600 to-amber-400"/><div className="px-6 pb-7 text-center"><div className="mx-auto -mt-16 flex h-32 w-32 items-center justify-center rounded-full border-4 border-[#160d25] bg-gradient-to-br from-amber-300 to-fuchsia-600 text-5xl font-black">{avatarText(name)}</div><h2 className="mt-4 text-3xl font-black">{name}</h2><p className="text-violet-200/60">@{name}</p><div className="mx-auto mt-5 max-w-md rounded-2xl bg-white/5 p-4 text-sm text-violet-100/70"><p className="break-all">{identity}</p></div><div className="mt-5 grid grid-cols-2 gap-3"><button className="rounded-2xl bg-white px-4 py-3 font-black text-violet-900"><Camera className="ml-2 inline h-4 w-4"/>تغيير الصورة</button><button className="rounded-2xl border border-white/15 px-4 py-3 font-black"><User className="ml-2 inline h-4 w-4"/>تعديل البروفايل</button></div></div></div></section> }
-function SettingsView() { const [notifications,setNotifications]=useState(true); const [privacy,setPrivacy]=useState(true); return <section><PageTitle title="الإعدادات" subtitle="خصص تجربتك"/><div className="glass-panel rounded-[2rem] p-4">{[{t:"الإشعارات",d:"تنبيهات الرسائل والمكالمات",i:Bell,v:notifications,s:setNotifications},{t:"الخصوصية",d:"السماح لجهات الاتصال فقط",i:ShieldCheck,v:privacy,s:setPrivacy}].map(x=>{const I=x.i;return <div key={x.t} className="setting-row"><span className="service-icon h-11 w-11 bg-gradient-to-br from-violet-500 to-fuchsia-500"><I/></span><span className="flex-1"><strong>{x.t}</strong><small className="block text-violet-200/55">{x.d}</small></span><button onClick={()=>x.s(!x.v)} className={`toggle ${x.v?"on":""}`}><span/></button></div>})}<div className="setting-row"><span className="service-icon h-11 w-11 bg-gradient-to-br from-cyan-500 to-blue-600"><Globe2/></span><span className="flex-1"><strong>اللغة</strong><small className="block text-violet-200/55">العربية</small></span><ChevronRight className="h-5 w-5 rotate-180"/></div></div></section> }
+function SettingsView({
+  language,
+  setLanguage,
+}: {
+  language: LanguageCode
+  setLanguage: (language: LanguageCode) => void
+})  { const [notifications,setNotifications]=useState(true); const [privacy,setPrivacy]=useState(true); return <section><PageTitle title="الإعدادات" subtitle="خصص تجربتك"/>
+<div className="glass-panel rounded-[2rem] p-4">
+  <label className="mb-2 block text-sm font-bold text-violet-100">
+    {translations[language].language}
+  </label>
+
+  <select
+    value={language}
+    onChange={(event) =>
+      setLanguage(event.target.value as LanguageCode)
+    }
+    className="w-full rounded-2xl border border-white/15 bg-[#1a0b2e] px-4 py-3 text-white outline-none"
+  >
+    {languages.map((item) => (
+      <option key={item.code} value={item.code}>
+        {item.name}
+      </option>
+    ))}
+  </select>
+</div>
+<div className="glass-panel rounded-[2rem] p-4">{[{t:"الإشعارات",d:"تنبيهات الرسائل والمكالمات",i:Bell,v:notifications,s:setNotifications},{t:"الخصوصية",d:"السماح لجهات الاتصال فقط",i:ShieldCheck,v:privacy,s:setPrivacy}].map(x=>{const I=x.i;return <div key={x.t} className="setting-row"><span className="service-icon h-11 w-11 bg-gradient-to-br from-violet-500 to-fuchsia-500"><I/></span><span className="flex-1"><strong>{x.t}</strong><small className="block text-violet-200/55">{x.d}</small></span><button onClick={()=>x.s(!x.v)} className={`toggle ${x.v?"on":""}`}><span/></button></div>})}<div className="setting-row"><span className="service-icon h-11 w-11 bg-gradient-to-br from-cyan-500 to-blue-600"><Globe2/></span><span className="flex-1"><strong>اللغة</strong><small className="block text-violet-200/55">العربية</small></span><ChevronRight className="h-5 w-5 rotate-180"/></div></div></section> }
 function PageTitle({title,subtitle}:{title:string;subtitle:string}) { return <div className="mb-5"><h1 className="text-3xl font-black">{title}</h1><p className="mt-1 text-violet-200/60">{subtitle}</p></div> }
