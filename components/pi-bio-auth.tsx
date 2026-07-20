@@ -238,7 +238,7 @@ function Landing({ loading, onSignIn }: { loading: boolean; onSignIn: () => void
         <div className="flex h-full w-full items-center justify-center rounded-[2.35rem] bg-[#171026] text-7xl font-black text-amber-300">π</div>
       </div>
       <h1 className="text-4xl font-black tracking-tight sm:text-5xl">Pi Box <span className="text-amber-300">Connect</span></h1>
-      <p className="mt-3 text-lg text-violet-100/80">تواصل بحرية. ابقَ آمنًا.</p>
+      
       <div className="my-7 grid grid-cols-3 gap-3 text-xs text-violet-100/70">
         <div className="feature-chip"><MessageCircle/>رسائل</div><div className="feature-chip"><Mic/>صوت</div><div className="feature-chip"><ShieldCheck/>خصوصية</div>
       </div>
@@ -250,20 +250,95 @@ function Landing({ loading, onSignIn }: { loading: boolean; onSignIn: () => void
   </main>
 }
 
-function HomeView({ name, onNavigate }: { name: string; onNavigate: (v: View) => void }) {
-  return <div className="space-y-6">
-    <section className="hero-card overflow-hidden rounded-[2.2rem] p-6 sm:p-8">
-      <div className="relative z-10 max-w-xl"><span className="status-pill"><span/> متصل عبر هوية Pi</span><h2 className="mt-5 text-3xl font-black sm:text-5xl">مرحبًا، {name} 👋</h2><p className="mt-3 max-w-lg text-violet-100/75">رسائلك، مكالماتك وملفاتك في مكان واحد بتجربة أنيقة ومصممة للهاتف.</p><button onClick={() => onNavigate("chats")} className="mt-6 rounded-2xl bg-white px-5 py-3 font-black text-violet-900">ابدأ محادثة</button></div>
-    </section>
-    <section><div className="mb-4 flex items-end justify-between"><div><h3 className="text-2xl font-black">الخدمات</h3><p className="text-sm text-violet-200/60">كل ما تحتاجه للتواصل</p></div></div>
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{quickActions.map((item) => { const Icon=item.icon; return <button key={item.label} onClick={() => onNavigate(item.view)} className="service-card text-right"><span className={`service-icon bg-gradient-to-br ${item.gradient}`}><Icon/></span><strong>{item.label}</strong><small>{item.sub}</small><ChevronRight className="arrow h-5 w-5 rotate-180"/></button> })}</div>
-    </section>
-    <section className="grid gap-4 lg:grid-cols-[1.35fr_.65fr]"><div className="glass-panel rounded-[2rem] p-5"><div className="flex items-center justify-between"><div><h3 className="text-xl font-black">آخر المحادثات</h3><p className="text-sm text-violet-200/60">ابقَ قريبًا ممن يهمك</p></div><button onClick={() => onNavigate("chats")} className="text-sm font-bold text-amber-300">عرض الكل</button></div><div className="mt-4 space-y-2">{contacts.slice(0,3).map(c=><ContactRow key={c.id} contact={c}/>)}</div></div>
-      <div className="glass-panel rounded-[2rem] p-5"><Globe2 className="h-8 w-8 text-amber-300"/><h3 className="mt-4 text-xl font-black">اتصال عالمي</h3><p className="mt-2 text-sm leading-6 text-violet-100/65">استخدم هوية Pi للتواصل دون كشف رقم هاتفك أو بريدك.</p><div className="mt-5 flex items-center gap-2 text-xs text-emerald-300"><ShieldCheck className="h-4 w-4"/> الخصوصية أولًا</div></div>
-    </section>
-  </div>
-}
+function HomeView({
+  name,
+  onNavigate,
+}: {
+  name: string
+  onNavigate: (view: View) => void
+}) {
+  return (
+    <div className="space-y-6">
+      <section className="hero-card overflow-hidden rounded-[2.2rem] p-6 sm:p-8">
+        <div className="relative z-10 max-w-xl">
+          <span className="status-pill">
+            <span />
+            Pi
+          </span>
 
+          <h2 className="mt-5 text-3xl font-black sm:text-5xl">
+            {name} 👋
+          </h2>
+
+          <button
+            type="button"
+            onClick={() => onNavigate("chats")}
+            className="mt-6 rounded-2xl bg-white px-5 py-3 font-black text-violet-900"
+          >
+            {translations.en.chats}
+          </button>
+        </div>
+      </section>
+
+      <section>
+        <div className="mb-4">
+          <h3 className="text-2xl font-black">
+            Pi Box Connect
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          {quickActions.map((item) => {
+            const Icon = item.icon
+
+            return (
+              <button
+                key={item.label}
+                type="button"
+                onClick={() => onNavigate(item.view)}
+                className="service-card"
+              >
+                <span
+                  className={`service-icon bg-gradient-to-br ${item.gradient}`}
+                >
+                  <Icon />
+                </span>
+
+                <strong>{item.label}</strong>
+
+                <ChevronRight className="arrow h-5 w-5 rotate-180" />
+              </button>
+            )
+          })}
+        </div>
+      </section>
+
+      <section className="glass-panel rounded-[2rem] p-5">
+        <div className="flex items-center justify-between">
+          <MessageCircle className="h-6 w-6 text-amber-300" />
+
+          <button
+            type="button"
+            onClick={() => onNavigate("chats")}
+            className="text-sm font-bold text-amber-300"
+          >
+            {translations.en.chats}
+          </button>
+        </div>
+
+        <div className="mt-4 space-y-2">
+          {contacts.slice(0, 3).map((contact) => (
+            <ContactRow
+              key={contact.id}
+              contact={contact}
+              onClick={() => onNavigate("chats")}
+            />
+          ))}
+        </div>
+      </section>
+    </div>
+  )
+}
 function ContactRow({ contact, onClick }: { contact: Contact; onClick?: () => void }) { return <button onClick={onClick} className="contact-row w-full"><span className={`avatar bg-gradient-to-br ${contact.color}`}>{avatarText(contact.name)}</span><span className="min-w-0 flex-1 text-right"><strong className="block">{contact.name}</strong><small className="block truncate text-violet-200/55">{contact.handle} · {contact.status}</small></span><ChevronRight className="h-5 w-5 rotate-180 text-violet-200/35"/></button> }
 function ChatsView({ onOpen }: { onOpen: (c: Contact) => void }) { return <section><PageTitle title="الرسائل" subtitle="محادثاتك الأخيرة"/><div className="glass-panel rounded-[2rem] p-3"><label className="search-box"><Search/><input placeholder="ابحث عن محادثة..."/></label><div className="mt-3 space-y-1">{contacts.map((c,i)=><div key={c.id} className="relative"><ContactRow contact={c} onClick={()=>onOpen(c)}/>{i<2&&<span className="absolute left-4 top-6 min-w-5 rounded-full bg-fuchsia-500 px-1.5 text-center text-xs font-bold">{i+1}</span>}</div>)}</div></div></section> }
 
