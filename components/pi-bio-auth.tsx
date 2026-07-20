@@ -30,11 +30,7 @@ type ChatMessage = {
 
 type Contact = { id: string; name: string; handle: string; status: string; color: string }
 
-const contacts: Contact[] = [
-  { id: "1", name: "سارة", handle: "@sara.pi", status: "متصلة الآن", color: "from-fuchsia-500 to-purple-700" },
-  { id: "2", name: "أحمد", handle: "@ahmed.pi", status: "منذ 5 دقائق", color: "from-cyan-400 to-blue-700" },
-  { id: "3", name: "ليلى", handle: "@layla.pi", status: "متصلة الآن", color: "from-amber-400 to-orange-600" },
-]
+const contacts: Contact[] = []
 
 const quickActions = [
   { view: "chats" as View, label: "الرسائل", sub: "محادثاتك الآمنة", icon: MessageCircle, gradient: "from-blue-500 to-cyan-400" },
@@ -58,10 +54,7 @@ export default function PiBioAuth() {
   const [attachmentOpen, setAttachmentOpen] = useState(false)
   const [recording, setRecording] = useState(false)
   const [recordSeconds, setRecordSeconds] = useState(0)
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    { id: "welcome", kind: "text", text: "مرحبًا بك في Pi Box Connect 👋", mine: false, time: "09:42" },
-    { id: "privacy", kind: "text", text: "تواصل بهويتك في Pi، بدون رقم هاتف أو بريد إلكتروني.", mine: false, time: "09:43" },
-  ])
+  const [messages, setMessages] = useState<ChatMessage[]>([])
   useEffect(() => {
   const savedLanguage = localStorage.getItem("pi-box-language") as LanguageCode | null
 
