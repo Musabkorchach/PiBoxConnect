@@ -302,48 +302,117 @@ function SettingsView({
   const [privacy, setPrivacy] = useState(true)
   const [languageOpen, setLanguageOpen] = useState(false)
 
-  return <section><PageTitle title="الإعدادات" subtitle="خصص تجربتك"/>
-<div className="glass-panel rounded-[2rem] p-4">
-  <label className="mb-2 block text-sm font-bold text-violet-100">
-    {translations[language].language}
-  </label>
+  const t = translations[language]
+  const selectedLanguage = languages.find(
+    (item) => item.code === language
+  )
 
-  <button
-  type="button"
-  onClick={() => setLanguageOpen((open) => !open)}
-  className="flex w-full items-center justify-between rounded-2xl border border-white/15 bg-[#1a0b2e] px-4 py-3 text-white"
->
-  <span>
-    {languages.find((item) => item.code === language)?.name}
-  </span>
-  <ChevronRight
-    className={`h-5 w-5 transition-transform ${
-      languageOpen ? "rotate-90" : ""
-    }`}
-  />
-</button>
+  const settingItems = [
+    {
+      title: language === "ar" ? "الإشعارات" : "Notifications",
+      description:
+        language === "ar"
+          ? "تنبيهات الرسائل والمكالمات"
+          : "Message and call notifications",
+      icon: Bell,
+      value: notifications,
+      setValue: setNotifications,
+    },
+    {
+      title: language === "ar" ? "الخصوصية" : "Privacy",
+      description:
+        language === "ar"
+          ? "السماح لجهات الاتصال فقط"
+          : "Allow contacts only",
+      icon: ShieldCheck,
+      value: privacy,
+      setValue: setPrivacy,
+    },
+  ]
 
-{languageOpen && (
-  <div className="mt-3 max-h-72 overflow-y-auto rounded-2xl border border-white/15 bg-[#160d25] p-2">
-    {languages.map((item) => (
-      <button
-        key={item.code}
-        type="button"
-        onClick={() => {
-          setLanguage(item.code)
-          setLanguageOpen(false)
-        }}
-        className={`mb-1 flex w-full rounded-xl px-4 py-3 text-start ${
-          language === item.code
-            ? "bg-violet-500/30 text-white"
-            : "text-violet-100 hover:bg-white/10"
-        }`}
-      >
-        {item.name}
-      </button>
-    ))}
-  </div>
-)}
-</div>
-<div className="glass-panel rounded-[2rem] p-4">{[{t:"الإشعارات",d:"تنبيهات الرسائل والمكالمات",i:Bell,v:notifications,s:setNotifications},{t:"الخصوصية",d:"السماح لجهات الاتصال فقط",i:ShieldCheck,v:privacy,s:setPrivacy}].map(x=>{const I=x.i;return <div key={x.t} className="setting-row"><span className="service-icon h-11 w-11 bg-gradient-to-br from-violet-500 to-fuchsia-500"><I/></span><span className="flex-1"><strong>{x.t}</strong><small className="block text-violet-200/55">{x.d}</small></span><button onClick={()=>x.s(!x.v)} className={`toggle ${x.v?"on":""}`}><span/></button></div>})}<div className="setting-row"><span className="service-icon h-11 w-11 bg-gradient-to-br from-cyan-500 to-blue-600"><Globe2/></span><span className="flex-1"><strong>اللغة</strong><small className="block text-violet-200/55">العربية</small></span><ChevronRight className="h-5 w-5 rotate-180"/></div></div></section> }
+  return (
+    <section>
+      <PageTitle
+        title={t.settings}
+        subtitle={
+          language === "ar"
+            ? "خصص تجربتك"
+            : "Customize your experience"
+        }
+      />
+
+      <div className="glass-panel mb-4 rounded-[2rem] p-4">
+        <label className="mb-2 block text-sm font-bold text-violet-100">
+          {t.language}
+        </label>
+
+        <button
+          type="button"
+          onClick={() => setLanguageOpen((open) => !open)}
+          className="flex w-full items-center justify-between rounded-2xl border border-white/15 bg-[#1a0b2e] px-4 py-3 text-white"
+        >
+          <span>{selectedLanguage?.name ?? t.language}</span>
+
+          <ChevronRight
+            className={`h-5 w-5 transition-transform ${
+              languageOpen ? "rotate-90" : ""
+            }`}
+          />
+        </button>
+
+        {languageOpen && (
+          <div className="mt-3 max-h-72 overflow-y-auto rounded-2xl border border-white/15 bg-[#160d25] p-2">
+            {languages.map((item) => (
+              <button
+                key={item.code}
+                type="button"
+                onClick={() => {
+                  setLanguage(item.code)
+                  setLanguageOpen(false)
+                }}
+                className={`mb-1 flex w-full rounded-xl px-4 py-3 text-start ${
+                  language === item.code
+                    ? "bg-violet-500/30 text-white"
+                    : "text-violet-100 hover:bg-white/10"
+                }`}
+              >
+                {item.name}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="glass-panel rounded-[2rem] p-4">
+        {settingItems.map((item) => {
+          const Icon = item.icon
+
+          return (
+            <div key={item.title} className="setting-row">
+              <span className="service-icon h-11 w-11 bg-gradient-to-br from-violet-500 to-fuchsia-500">
+                <Icon />
+              </span>
+
+              <span className="flex-1">
+                <strong>{item.title}</strong>
+                <small className="block text-violet-200/55">
+                  {item.description}
+                </small>
+              </span>
+
+              <button
+                type="button"
+                onClick={() => item.setValue(!item.value)}
+                className={`toggle ${item.value ? "on" : ""}`}
+              >
+                <span />
+              </button>
+            </div>
+          )
+        })}
+      </div>
+    </section>
+  )
+}
+     
 function PageTitle({title,subtitle}:{title:string;subtitle:string}) { return <div className="mb-5"><h1 className="text-3xl font-black">{title}</h1><p className="mt-1 text-violet-200/60">{subtitle}</p></div> }
