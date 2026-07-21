@@ -30,9 +30,7 @@ type ChatMessage = {
 
 type Contact = { id: string; name: string; handle: string; status: string; color: string }
 
-const contacts: Contact[] = [{
-  id: "1", name: "Test User", handle: "@testuser", status: "متصل", color: "from-violet-500 to-fuchsia-500",
-}]
+const initialContacts: Contact[] = []
 
 const quickActions = [
   { view: "chats" as View, label: "الرسائل", sub: "محادثاتك الآمنة", icon: MessageCircle, gradient: "from-blue-500 to-cyan-400" },
@@ -51,7 +49,8 @@ export default function PiBioAuth() {
   const [loading, setLoading] = useState(false)
   const [view, setView] = useState<View>("home")
   const [previousView, setPreviousView] = useState<View>("home")
-  const [activeContact, setActiveContact] = useState<Contact>(contacts[0])
+  const [contacts, setContacts] = useState<Contact[]>(initialContacts)
+  const [activeContact, setActiveContact] = useState<Contact | null>(null)
   const [message, setMessage] = useState("")
   const [attachmentOpen, setAttachmentOpen] = useState(false)
   const [recording, setRecording] = useState(false)
