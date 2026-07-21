@@ -30,7 +30,9 @@ type ChatMessage = {
 
 type Contact = { id: string; name: string; handle: string; status: string; color: string }
 
-const contacts: Contact[] = []
+const contacts: Contact[] = [{
+  id: "1", name: "Test User", handle: "@testuser", status: "متصل", color: "from-violet-500 to-fuchsia-500",
+}]
 
 const quickActions = [
   { view: "chats" as View, label: "الرسائل", sub: "محادثاتك الآمنة", icon: MessageCircle, gradient: "from-blue-500 to-cyan-400" },
